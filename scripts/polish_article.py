@@ -9,6 +9,7 @@ from pathlib import Path
 
 DATASETS = ["MVTec", "VisA", "BTAD", "DAGM", "MPDD", "Real-IAD", "MVTec-3D", "MVTec-loco"]
 METHOD_NAMES = [
+    "SuperADD",
     "CCAD",
     "CLIP",
     "WinCLIP",
@@ -96,10 +97,15 @@ def detected_terms(text: str, terms: list[str]) -> list[str]:
 
 
 def infer_method_label(original_title: str, body: str) -> str:
+    title_methods = detected_terms(original_title, METHOD_NAMES)
+    if title_methods:
+        return title_methods[0]
     text = f"{original_title} {body}"
-    methods = detected_terms(text, METHOD_NAMES)
+    methods = detected_terms(text[:2500], METHOD_NAMES)
     if methods:
         return methods[0]
+    if "training-free" in original_title.lower() or "class-agnostic" in original_title.lower():
+        return "SuperADD"
     if "compressed global feature" in text.lower() or "全局特征" in text:
         return "全局特征压缩"
     if "zero-shot" in text.lower() or "零样本" in text:
@@ -115,6 +121,8 @@ def attractive_title(original_title: str, body: str) -> str:
     datasets = detected_terms(f"{original_title} {body}", DATASETS)
     dataset_part = "、".join(datasets[:2]) if datasets else "工业数据集"
 
+    if "superadd" in original_title.lower() or method == "SuperADD":
+        return "不用训练也能做异常分割？SuperADD 面向工业质检的免训练方案"
     if "ccad" in text or "compressed global feature" in text:
         return "不用缺陷样本也能稳定位？CCAD 用全局特征压缩刷新工业异常检测"
     if "clip" in text and ("zero-shot" in text or "零样本" in body):
@@ -180,7 +188,7 @@ def value_section(original_title: str, body: str) -> str:
     dataset_text = "、".join(datasets[:4]) if datasets else "MVTec、VisA 等工业异常检测数据集"
     return f"""## 为什么这篇值得看
 
-这类文章能不能成为目标选题，关键看它有没有具体技术增量。{method} 的价值不在于换一个名字包装异常检测，而在于它尝试回答三个产线团队真正关心的问题：
+判断一篇工业异常检测论文是否值得继续读，关键不在于名字有多新，而在于它有没有具体技术增量。{method} 的价值不在于换一个名字包装异常检测，而在于它尝试回答三个产线团队真正关心的问题：
 
 - **缺陷样本少时怎么建模**：工业现场很难提前收集完整缺陷类型，方法必须尽量依赖正常样本或少量样本。
 - **异常区域能不能稳定定位**：只给 image-level 判断不够，AOI 复核、返修和工艺追溯更需要 pixel-level 热力图。
