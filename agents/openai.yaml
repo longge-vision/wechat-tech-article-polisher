@@ -1,4 +1,1 @@
-interface:
-  display_name: "WeChat Article Polisher"
-  short_description: "Polish Chinese technical WeChat drafts"
-  default_prompt: "Polish this technical paper draft into a stronger Chinese WeChat Official Account article, with a better title, clearer structure, Chinese captions, and no long untranslated English paragraphs."
+@-
