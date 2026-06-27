@@ -49,6 +49,20 @@ Use this pass whenever polishing a paper-to-WeChat draft, especially when the us
 
 ## Run
 
+## Coze Draft Normalization
+
+When a Coze return file such as `.coze.md` or `.coze_material.coze.md` is available:
+
+- Read the Coze draft, the original material package, and parsed paper JSON if present.
+- Treat the Coze draft as a narrative seed rather than final truth. Cross-check claims, metrics, datasets, and method descriptions against the parsed paper/material before publishing.
+- Keep the best parts of Coze's writing: stronger title, pain-point lead, section rhythm, and plain-language explanations.
+- Remove Coze-only artifacts: prompts, task notes, "根据素材", "作为公众号编辑", placeholder instructions, repeated citations, unsupported claims, and generic summaries.
+- Replace hallucinated or remote image references with verified paper image paths from parsed JSON/material. If a figure is important but missing, reinsert it near the matching paragraph.
+- Convert resource links into keyword auto-reply CTA. Do not leave arXiv/PDF/GitHub/project URLs in the public body when the publishing workflow uses backend keyword reply.
+- Preserve or add `wenyan` frontmatter and a Chinese title before publishing.
+- Append/rebuild clickable history article recommendations after normalization, not before.
+- Run the same Quality Gate below; do not publish directly from Coze output.
+
 ```powershell
 python C:\Users\User\.codex\skills\wechat-tech-article-polisher\scripts\polish_article.py `
   --input "F:\program\公众号\.paper2wechat\<arxiv_id>\outputs\<file>.wenyan.md" `
@@ -97,3 +111,4 @@ Before publishing, verify:
 ## Integration
 
 For `arxiv-defect-wechat-daily`, run this polisher after `make_article()` and before `wenyan publish`.
+For `paper2wechat` with Coze enabled, run this polisher after saving the Coze draft and before one-click WeChat publishing.
