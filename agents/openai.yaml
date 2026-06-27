@@ -1,1 +1,4 @@
-@-
+interface:
+  display_name: "WeChat Article Polisher"
+  short_description: "Polish Chinese technical WeChat drafts"
+  default_prompt: "Polish this technical paper draft or Coze/扣子 first draft into a stronger Chinese WeChat Official Account article: improve the click-worthy title and first-screen hook, cross-check claims against paper materials, preserve only paper figures with Chinese captions, remove public resource links when keyword auto-reply is used, add or repair citation notes, remove AI-writing tone, and run the final social-article quality gate before publishing."
